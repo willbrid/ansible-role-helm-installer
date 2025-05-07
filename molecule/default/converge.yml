@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars:
+    helm_version: "v3.17.3"
+    should_verify_helm_checksum: true
+
+  tasks:
+    - name: Include willbrid.helm_installer
+      ansible.builtin.include_role:
+        name: "willbrid.helm_installer"

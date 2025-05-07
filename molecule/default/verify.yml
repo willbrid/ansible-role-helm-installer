@@ -1,0 +1,17 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars:
+    helm_version: "v3.17.3"
+    helm_bin_dir: "/usr/local/bin"
+
+  tasks:
+    - name: Get helm binary version
+      ansible.builtin.command: "{{ helm_bin_dir }}/helm version --short"
+      register: helm_version_info
+      changed_when: false
+    - name: Check helm correct version
+      ansible.builtin.assert:
+        that:
+          - helm_version_info.stdout is ansible.builtin.search(helm_version)
