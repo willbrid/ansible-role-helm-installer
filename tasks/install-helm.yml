@@ -1,0 +1,55 @@
+---
+- name: Download helm archive file in /tmp dir
+  ansible.builtin.get_url:
+    url: "{{ helm_download_url }}"
+    dest: "/tmp/{{ helm_archive_filename }}"
+    mode: 0755
+
+- name: Download helm archive file checksum in /tmp dir
+  ansible.builtin.get_url:
+    url: "{{ helm_checksum_download_url }}"
+    dest: "/tmp/{{ helm_archive_filename }}.sha256sum"
+    mode: 0755
+  when: should_verify_helm_checksum
+
+- name: Verify helm archive file checksum
+  ansible.builtin.shell: "cd /tmp && sha256sum -c /tmp/{{ helm_archive_filename }}.sha256sum"
+  register: helm_checksum_result
+  changed_when: false
+  when: should_verify_helm_checksum
+
+- name: Check if helm archive file checksum is correct
+  ansible.builtin.assert:
+    that:
+      - helm_checksum_result.rc == 0
+    fail_msg: "the helm archive checksum is not correct"
+  when: should_verify_helm_checksum
+
+- name: Create helm unarchived dir in /tmp
+  ansible.builtin.file:
+    path: "/tmp/{{ helm_archive_filename.split('.tar.gz')[0] }}"
+    state: directory
+    mode: 0755
+
+- name: Unarchive helm archive file
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ helm_archive_filename }}"
+    dest: "/tmp/{{ helm_archive_filename.split('.tar.gz')[0] }}"
+    remote_src: true
+
+- name: Copy helm binary file to bin dir
+  ansible.builtin.copy:
+    src: "/tmp/{{ helm_archive_filename.split('.tar.gz')[0] }}/linux-{{ host_architecture }}/helm"
+    dest: "{{ helm_bin_dir }}/helm"
+    mode: 0755
+    remote_src: true
+
+- name: Find files and directories in /tmp starting with helm
+  ansible.builtin.find:
+    paths: "/tmp"
+    patterns: "^helm.*"
+    use_regex: true
+    file_type: any
+  register: helm_installation_items_to_delete
+  notify: Cleanup all helm installation items
+  changed_when: true
