@@ -1,0 +1,4 @@
+---
+helm_version: "v3.17.3"
+helm_bin_dir: "/usr/local/bin"
+should_verify_helm_checksum: true
