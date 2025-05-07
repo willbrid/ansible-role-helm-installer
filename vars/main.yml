@@ -1,4 +1,5 @@
 ---
 host_architecture: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
-helm_download_url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ host_architecture }}.tar.gz"
+helm_archive_filename: "helm-{{ helm_version }}-linux-{{ host_architecture }}.tar.gz"
+helm_download_url: "https://get.helm.sh/{{ helm_archive_filename }}"
 helm_checksum_download_url: "{{ helm_download_url }}.sha256sum"
