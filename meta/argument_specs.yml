@@ -6,21 +6,21 @@ argument_specs:
       - "Install helm for RedHat and Debian distros"
     author: "WillBrid"
     options:
-      hi_helm_version:
+      helm_version:
         type: str
         required: false
         default: "v3.17.3"
         description:
           - "helm version"
-      hi_helm_bin_dir:
+      helm_bin_dir:
         type: str
         required: false
         default: "/usr/local/bin"
         description:
           - "helm installation directory"
-      hi_helm_tarfile_checksum:
-        type: str
+      should_verify_helm_checksum:
+        type: bool
         required: false
-        default: ""
+        default: true
         description:
-          - "helm archive file checksum"
+          - "whether to verify helm archive file checksum"
