@@ -1,0 +1,6 @@
+---
+- name: Cleanup all helm installation items
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ helm_installation_items_to_delete.files }}"
