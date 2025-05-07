@@ -1,0 +1,14 @@
+---
+- name: Get helm installed version
+  ansible.builtin.command: "helm version --short"
+  register: helm_check_info
+  changed_when: false
+  failed_when: false
+
+- name: Check if helm is already installed with the correct version
+  ansible.builtin.set_fact:
+    helm_already_installed: "{{ helm_check_info is defined and helm_check_info.stdout is ansible.builtin.search(helm_version) }}"
+
+- name: Install helm
+  ansible.builtin.include_tasks: "install-helm.yml"
+  when: not helm_already_installed
