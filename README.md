@@ -25,7 +25,7 @@ Aucune.
 - Installation du rôle
 
 ```bash
-mkdir -p $HOME/install-helm/roles
+mkdir -p $HOME/install-helm
 ```
 
 ```bash
@@ -39,7 +39,7 @@ vim $HOME/install-helm/requirements.yml
 ```
 
 ```bash
-cd $HOME/install-helm && ansible-galaxy install -r requirements.yml --roles-path roles
+cd $HOME/install-helm && ansible-galaxy install --force -r requirements.yml
 ```
 
 - Utilisation du rôle dans un playbook
