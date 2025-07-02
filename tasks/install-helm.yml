@@ -5,25 +5,25 @@
     dest: "/tmp/{{ helm_archive_filename }}"
     mode: 0755
 
-- name: Download helm archive file checksum in /tmp dir
-  ansible.builtin.get_url:
-    url: "{{ helm_checksum_download_url }}"
-    dest: "/tmp/{{ helm_archive_filename }}.sha256sum"
-    mode: 0755
+- name: Verify checksum for helm archive file
   when: should_verify_helm_checksum
+  block:
+    - name: Download helm archive file checksum in /tmp dir
+      ansible.builtin.get_url:
+        url: "{{ helm_checksum_download_url }}"
+        dest: "/tmp/{{ helm_archive_filename }}.sha256sum"
+        mode: 0755
 
-- name: Verify helm archive file checksum
-  ansible.builtin.shell: "cd /tmp && sha256sum -c /tmp/{{ helm_archive_filename }}.sha256sum"
-  register: helm_checksum_result
-  changed_when: false
-  when: should_verify_helm_checksum
+    - name: Verify helm archive file checksum
+      ansible.builtin.shell: "cd /tmp && sha256sum -c {{ helm_archive_filename }}.sha256sum"
+      register: helm_checksum_result
+      changed_when: false
 
-- name: Check if helm archive file checksum is correct
-  ansible.builtin.assert:
-    that:
-      - helm_checksum_result.rc == 0
-    fail_msg: "the helm archive checksum is not correct"
-  when: should_verify_helm_checksum
+    - name: Check if helm archive file checksum is correct
+      ansible.builtin.assert:
+        that:
+          - helm_checksum_result.rc == 0
+        fail_msg: "the helm archive checksum is not correct"
 
 - name: Create helm unarchived dir in /tmp
   ansible.builtin.file:
