@@ -13,7 +13,7 @@ Le rôle **ansible-role-helm-installer** permet d’installer l’outil **Helm**
 |Nom|Type|Description|Obligatoire|Valeur par défaut|
 |---|----|-----------|-----------|-----------------|
 `helm_version`|str|numéro de version de helm. Format : vx.y.z|non|`"v3.17.3"`
-`helm_bin_dir`|str|répertoire d'installation du binaire de helm|non|`"/usr/local/bin`
+`helm_bin_dir`|str|répertoire d'installation du binaire de helm|non|`"/usr/local/bin"`
 `should_verify_helm_checksum`|bool|dire s'il faut vérifier l'intégrité du fichier archive de helm après téléchargement|non|`true`
 
 ## Dépendances
@@ -35,7 +35,7 @@ vim $HOME/install-helm/requirements.yml
 ```yaml
 - name: ansible-role-helm-installer
   src: git+https://github.com/willbrid/ansible-role-helm-installer.git
-  version: v0.0.1
+  version: v0.0.2
 ```
 
 ```bash
